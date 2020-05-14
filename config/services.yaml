@@ -1,0 +1,45 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    oauth2_client_id: 1s7grpgmygbo0c0gccww0oss0oowg0oggc484c8ogcg4g0s4sk
+    oauth2_client_secret: 2eb5q5lw3nb4ogswsg8c88w4o4kow4kc08sooco800wc8oks4g
+    token_lifetime: 345600
+    front_url: 127.0.0.1:4200
+    #mailer_test_address: nouhagharbi188@gmail.com
+    #mailer_smtp_host: smtp.gmail.com
+    #mailer_smtp_port: 465
+    #mailer_smtp_user: nouhagharbi188@gmail.com
+    #mailer_smtp_password: akonstar23766518
+    #mailer_host: smtp.gmail.com
+    #mailer_port: 465
+
+
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+    authentication_service:
+        class: App\Services\AouthService
+        autowire: true
+        public: true
+    OAuth2\OAuth2: '@fos_oauth_server.server'

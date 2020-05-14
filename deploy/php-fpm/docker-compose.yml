@@ -1,0 +1,62 @@
+version: '2'
+services:
+    mysql:
+      image: mysql:5.7
+      container_name: mysql
+      environment:
+        - "MYSQL_ROOT_PASSWORD=root"
+        - "MYSQL_DATABASE=pilotos1"
+        - "MYSQL_PASSWORD=dbpw"
+      ports:
+        - "3306:3306" 
+    php:
+      build:
+        context: .
+        dockerfile: /home/pc/Bureau/WatchRESTAPI/pilotos/deploy/php-fpm/Dockerfile
+      container_name: php
+      environment:
+        - DATABASE_URL=mysql://root:root@mysql:3306/pilotos1
+      env_file:
+        - /home/pc/Bureau/WatchRESTAPI/pilotos/.env           
+      ports:
+        - '9002:9000'
+      depends_on:
+        - mysql
+      links: 
+        - mysql:mysql
+      volumes:
+        - /home/pc/Bureau/WatchRESTAPI/pilotos:/var/www/symfony:cached
+    phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      container_name: phpmyadmin
+      ports:
+        - 8090:80
+      links:
+        - mysql
+      environment:
+        MYSQL_USERNAME: root
+        MYSQL_ROOT_PASSWORD: root
+        PMA_HOST: mysql
+
+    nginx:
+      build:
+        context: /home/pc/Bureau/WatchRESTAPI/pilotos/deploy/nginx
+        dockerfile: /home/pc/Bureau/WatchRESTAPI/pilotos/deploy/nginx/Dockerfile
+      ports:
+        - '8081:80'
+      links:
+        - php:php
+      volumes_from:
+        - php
+    pilotos:
+      build:
+        context: .
+        dockerfile: /home/pc/projet_angular2/Pilotos/Dockerfile
+      image: pilotos 
+      container_name: angular-docker
+      ports:
+        - 8084:80
+      links:
+        - php
+      
+

@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Enjeu{% endblock %}
+
+{% block body %}
+    <h1>Enjeu</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ enjeu.id }}</td>
+            </tr>
+            <tr>
+                <th>DescriptionEnjeu</th>
+                <td>{{ enjeu.DescriptionEnjeu }}</td>
+            </tr>
+            <tr>
+                <th>TypeEnjeu</th>
+                <td>{{ enjeu.TypeEnjeu }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('enjeu_index') }}">back to list</a>
+
+    <a href="{{ path('enjeu_edit', {'id': enjeu.id}) }}">edit</a>
+
+    {{ include('enjeu/_delete_form.html.twig') }}
+{% endblock %}
